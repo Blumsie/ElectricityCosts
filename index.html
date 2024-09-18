@@ -202,7 +202,7 @@
       formSelects.forEach(select => select.classList.toggle('dark-mode'));
       formLabels.forEach(label => label.classList.toggle('dark-mode'));
       submitButton.classList.toggle('dark-mode');
-      toggleButton.textContent = toggleButton.textContent === '🌙' ? : '☀️';
+      toggleButton.textContent = toggleButton.textContent === '🌙' ? '☀️' : '🌙';
     }
 
     toggleButton.addEventListener('click', toggleDarkMode);
