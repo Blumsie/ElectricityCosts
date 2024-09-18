@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electricity Cost Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="icon" href="https://emojiisland.com/cdn/shop/products/Money_Bag_Emoji_grande.png" type="image/png">
+
   <style>
     body {
       background-color: #f8f9fa;
@@ -59,14 +61,7 @@
       text-decoration: none;
       color: inherit;
     }
-    .form-control {
-      background-color: #fff;
-      border: 1px solid #ced4da;
-      transition: background-color 0.5s ease, color 0.5s ease;
-    }
-    .form-select {
-      background-color: #fff;
-      border: 1px solid #ced4da;
+    .form-control, .form-select, .form-label, button {
       transition: background-color 0.5s ease, color 0.5s ease;
     }
     body.dark-mode {
@@ -76,18 +71,13 @@
     .card.dark-mode {
       background-color: #1e1e1e;
     }
-    h1.dark-mode {
+    h1.dark-mode, label.dark-mode, button.dark-mode {
       color: #f8f9fa;
     }
     #result.dark-mode {
       color: #34c759;
     }
-    .form-control.dark-mode {
-      background-color: #333;
-      color: #f8f9fa;
-      border: 1px solid #555;
-    }
-    .form-select.dark-mode {
+    .form-control.dark-mode, .form-select.dark-mode {
       background-color: #333;
       color: #f8f9fa;
       border: 1px solid #555;
@@ -151,7 +141,7 @@
     </div>
 
     <div class="version">
-      v1.0.0 | <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
+      v1.1.3 | <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
     </div>
   </div>
 
@@ -161,28 +151,35 @@
     const result = document.getElementById('result');
     const card = document.querySelector('.card');
     const h1 = document.querySelector('h1');
-    const priceInput = document.getElementById('price');
+    const formLabels = document.querySelectorAll('.form-label');
+    const formControls = document.querySelectorAll('.form-control');
+    const formSelects = document.querySelectorAll('.form-select');
+    const submitButton = document.querySelector('button[type="submit"]');
     const currencySymbol = document.getElementById('currency-symbol');
     const currencySelector = document.getElementById('currency-selector');
     const languageSelector = document.getElementById('language-selector');
 
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
-    toggleButton.addEventListener('click', function() {
+    
+    function toggleDarkMode() {
       clickSound.play();
       body.classList.toggle('dark-mode');
       card.classList.toggle('dark-mode');
       h1.classList.toggle('dark-mode');
       result.classList.toggle('dark-mode');
-      document.querySelectorAll('.form-control').forEach(input => {
-        input.classList.toggle('dark-mode');
-      });
-      document.querySelectorAll('.form-select').forEach(select => {
-        select.classList.toggle('dark-mode');
-      });
+      
+      formControls.forEach(input => input.classList.toggle('dark-mode'));
+      formSelects.forEach(select => select.classList.toggle('dark-mode'));
+      formLabels.forEach(label => label.classList.toggle('dark-mode'));
+      submitButton.classList.toggle('dark-mode');
       toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
-    });
+    }
 
+    
+    toggleButton.addEventListener('click', toggleDarkMode);
+
+    
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
       clickSound.play();
@@ -190,7 +187,7 @@
       const unit = document.getElementById('unit').value;
       const time = parseFloat(document.getElementById('time').value);
       const timeUnit = document.getElementById('time-unit').value;
-      const pricePerKwh = parseFloat(priceInput.value);
+      const pricePerKwh = parseFloat(document.getElementById('price').value);
       const powerInKw = unit === 'W' ? power / 1000 : power;
       let timeInHours;
 
@@ -207,10 +204,10 @@
       const totalConsumption = powerInKw * timeInHours;
       const totalCost = totalConsumption * pricePerKwh;
       const formattedCost = totalCost.toFixed(2);
-      const fullCost = totalCost.toFixed(5);
-      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost} `;
+      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost}`;
     });
 
+    
     currencySelector.addEventListener('change', function() {
       const selectedCurrency = currencySelector.value;
       if (selectedCurrency === 'EUR') {
@@ -222,6 +219,7 @@
       }
     });
 
+ 
     languageSelector.addEventListener('change', function() {
       const selectedLanguage = languageSelector.value;
       if (selectedLanguage === 'es') {
