@@ -6,8 +6,10 @@
   <title>Electricity Cost Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <style>
+    
     body {
       background-color: #f8f9fa;
+      color: #343a40;
     }
     .container {
       margin-top: 50px;
@@ -28,11 +30,41 @@
       color: #28a745;
       text-align: center;
     }
+    #dark-mode-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+   
+    body.dark-mode {
+      background-color: #343a40;
+      color: #f8f9fa;
+    }
+    .card.dark-mode {
+      background-color: #495057;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    }
+    h1.dark-mode {
+      color: #f8f9fa;
+    }
+    #result.dark-mode {
+      color: #34c759;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
+   
+    <button id="dark-mode-toggle" class="btn">
+      ☀️
+    </button>
+
     <h1>Electricity Cost Calculator</h1>
     <div class="card">
       <form id="calculator-form">
@@ -62,7 +94,7 @@
         </div>
         <div class="mb-3">
           <label for="price" class="form-label">Price per kWh (€ or equivalent)</label>
-          <input type="number" class="form-control" id="price" placeholder="Enter price per kWh" required>
+          <input type="number" class="form-control" id="price" placeholder="Enter price per kWh" required step="0.0001" min="0">
         </div>
         <button type="submit" class="btn btn-primary w-100">Calculate</button>
       </form>
@@ -71,20 +103,42 @@
   </div>
 
   <script>
+
+    const toggleButton = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+    const result = document.getElementById('result');
+    const card = document.querySelector('.card');
+    const h1 = document.querySelector('h1');
+    
+    toggleButton.addEventListener('click', function() {
+
+      body.classList.toggle('dark-mode');
+      card.classList.toggle('dark-mode');
+      h1.classList.toggle('dark-mode');
+      result.classList.toggle('dark-mode');
+      
+
+      if (toggleButton.textContent === '☀️') {
+        toggleButton.textContent = '🌙';
+      } else {
+        toggleButton.textContent = '☀️';
+      }
+    });
+
+
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
       
-      // Get form values
+      
       const power = parseFloat(document.getElementById('power').value);
       const unit = document.getElementById('unit').value;
       const time = parseFloat(document.getElementById('time').value);
       const timeUnit = document.getElementById('time-unit').value;
       const pricePerKwh = parseFloat(document.getElementById('price').value);
       
-      // Convert power to kilowatts if needed
+
       const powerInKw = unit === 'W' ? power / 1000 : power;
       
-      // Convert time to hours
       let timeInHours;
       if (timeUnit === 'minutes') {
         timeInHours = time / 60;
@@ -96,13 +150,10 @@
         timeInHours = time * 24 * 7;
       }
       
-      // Calculate total consumption in kWh
       const totalConsumption = powerInKw * timeInHours;
       
-      // Calculate total cost
       const totalCost = totalConsumption * pricePerKwh;
       
-      // Display the result
       document.getElementById('result').innerText = `Total Cost: €${totalCost.toFixed(2)}`;
     });
   </script>
