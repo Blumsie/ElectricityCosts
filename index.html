@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electricity Cost Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      margin-top: 50px;
+      max-width: 600px;
+    }
+    .card {
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #343a40;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #28a745;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Electricity Cost Calculator</h1>
+    <div class="card">
+      <form id="calculator-form">
+        <div class="mb-3">
+          <label for="power" class="form-label">Power Consumption</label>
+          <input type="number" class="form-control" id="power" placeholder="Enter power consumption" required>
+        </div>
+        <div class="mb-3">
+          <label for="unit" class="form-label">Select Power Unit</label>
+          <select class="form-select" id="unit">
+            <option value="W">Watts (W)</option>
+            <option value="kW">Kilowatts (kW)</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label">Time in Use</label>
+          <input type="number" class="form-control" id="time" placeholder="Enter duration" required>
+        </div>
+        <div class="mb-3">
+          <label for="time-unit" class="form-label">Select Time Unit</label>
+          <select class="form-select" id="time-unit">
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Price per kWh (€ or equivalent)</label>
+          <input type="number" class="form-control" id="price" placeholder="Enter price per kWh" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Calculate</button>
+      </form>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('calculator-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Get form values
+      const power = parseFloat(document.getElementById('power').value);
+      const unit = document.getElementById('unit').value;
+      const time = parseFloat(document.getElementById('time').value);
+      const timeUnit = document.getElementById('time-unit').value;
+      const pricePerKwh = parseFloat(document.getElementById('price').value);
+      
+      // Convert power to kilowatts if needed
+      const powerInKw = unit === 'W' ? power / 1000 : power;
+      
+      // Convert time to hours
+      let timeInHours;
+      if (timeUnit === 'minutes') {
+        timeInHours = time / 60;
+      } else if (timeUnit === 'hours') {
+        timeInHours = time;
+      } else if (timeUnit === 'days') {
+        timeInHours = time * 24;
+      } else if (timeUnit === 'weeks') {
+        timeInHours = time * 24 * 7;
+      }
+      
+      // Calculate total consumption in kWh
+      const totalConsumption = powerInKw * timeInHours;
+      
+      // Calculate total cost
+      const totalCost = totalConsumption * pricePerKwh;
+      
+      // Display the result
+      document.getElementById('result').innerText = `Total Cost: €${totalCost.toFixed(2)}`;
+    });
+  </script>
+  
+</body>
+</html>
