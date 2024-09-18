@@ -195,6 +195,9 @@
         timeUnitLabel: 'Select Time Unit',
         priceLabel: 'Price per kWh',
         calculateButton: 'Calculate',
+        powerPlaceholder: 'Enter power consumption',
+        timePlaceholder: 'Enter duration',
+        pricePlaceholder: 'Enter price per kWh',
         minutes: 'Minutes',
         hours: 'Hours',
         days: 'Days',
@@ -208,6 +211,9 @@
         timeUnitLabel: 'Seleccionar Unidad de Tiempo',
         priceLabel: 'Precio por kWh',
         calculateButton: 'Calcular',
+        powerPlaceholder: 'Ingrese el consumo de energía',
+        timePlaceholder: 'Ingrese la duración',
+        pricePlaceholder: 'Ingrese el precio por kWh',
         minutes: 'Minutos',
         hours: 'Horas',
         days: 'Días',
@@ -221,6 +227,9 @@
         timeUnitLabel: 'Sélectionner l’Unité de Temps',
         priceLabel: 'Prix par kWh',
         calculateButton: 'Calculer',
+        powerPlaceholder: 'Entrez la consommation d’énergie',
+        timePlaceholder: 'Entrez la durée',
+        pricePlaceholder: 'Entrez le prix par kWh',
         minutes: 'Minutes',
         hours: 'Heures',
         days: 'Jours',
@@ -252,6 +261,10 @@
       document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || translations.en.timeUnitLabel;
       document.querySelector('label[for="price"]').innerHTML = `${translations[language].priceLabel || translations.en.priceLabel} (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
       document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || translations.en.calculateButton;
+      
+      document.getElementById('power').placeholder = translations[language].powerPlaceholder || translations.en.powerPlaceholder;
+      document.getElementById('time').placeholder = translations[language].timePlaceholder || translations.en.timePlaceholder;
+      document.getElementById('price').placeholder = translations[language].pricePlaceholder || translations.en.pricePlaceholder;
 
       Array.from(timeUnitSelect.options).forEach(option => {
         option.innerText = translations[language][option.value] || translations.en[option.value];
