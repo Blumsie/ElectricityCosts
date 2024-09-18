@@ -82,6 +82,9 @@
       color: #f8f9fa;
       border: 1px solid #555;
     }
+    .form-control::placeholder, .form-select::placeholder {
+      color: #f8f9fa;
+    }
   </style>
 </head>
 <body>
@@ -158,10 +161,17 @@
     const currencySymbol = document.getElementById('currency-symbol');
     const currencySelector = document.getElementById('currency-selector');
     const languageSelector = document.getElementById('language-selector');
+    const timeUnitSelect = document.getElementById('time-unit');
 
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
-    
+   
+    const translations = {
+      en: { minutes: 'Minutes', hours: 'Hours', days: 'Days', weeks: 'Weeks' },
+      es: { minutes: 'Minutos', hours: 'Horas', days: 'Días', weeks: 'Semanas' },
+      fr: { minutes: 'Minutes', hours: 'Heures', days: 'Jours', weeks: 'Semaines' }
+    };
+
     function toggleDarkMode() {
       clickSound.play();
       body.classList.toggle('dark-mode');
@@ -176,10 +186,55 @@
       toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
     }
 
-    
     toggleButton.addEventListener('click', toggleDarkMode);
 
-    
+    function updateTranslations(language) {
+      document.querySelector('h1').innerText = translations[language].calculatorTitle || 'Electricity Cost Calculator';
+      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || 'Power Consumption';
+      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || 'Select Power Unit';
+      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || 'Time in Use';
+      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || 'Select Time Unit';
+      document.querySelector('label[for="price"]').innerHTML = `Price per kWh (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
+      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || 'Calculate';
+
+      
+      Array.from(timeUnitSelect.options).forEach(option => {
+        option.innerText = translations[language][option.value] || option.value;
+      });
+    }
+
+    function detectUserLocale() {
+      const userLang = navigator.language || 'en';
+      const language = userLang.split('-')[0]; 
+      if (language === 'es') {
+        languageSelector.value = 'es';
+        currencySelector.value = 'EUR';
+        currencySymbol.innerText = '€';
+      } else if (language === 'fr') {
+        languageSelector.value = 'fr';
+        currencySelector.value = 'EUR';
+        currencySymbol.innerText = '€';
+      } else {
+        languageSelector.value = 'en';
+        currencySelector.value = 'USD';
+        currencySymbol.innerText = '$';
+      }
+      updateTranslations(languageSelector.value);
+    }
+
+    function updateCurrency(currency) {
+      if (currency === 'EUR') {
+        currencySymbol.innerText = '€';
+      } else if (currency === 'USD') {
+        currencySymbol.innerText = '$';
+      } else if (currency === 'GBP') {
+        currencySymbol.innerText = '£';
+      }
+      clickSound.play();
+    }
+
+    toggleButton.addEventListener('click', toggleDarkMode);
+
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
       clickSound.play();
@@ -207,47 +262,23 @@
       document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost}`;
     });
 
-    
     currencySelector.addEventListener('change', function() {
-      const selectedCurrency = currencySelector.value;
-      if (selectedCurrency === 'EUR') {
-        currencySymbol.innerText = '€';
-      } else if (selectedCurrency === 'USD') {
-        currencySymbol.innerText = '$';
-      } else if (selectedCurrency === 'GBP') {
-        currencySymbol.innerText = '£';
-      }
+      updateCurrency(currencySelector.value);
     });
 
- 
     languageSelector.addEventListener('change', function() {
       const selectedLanguage = languageSelector.value;
-      if (selectedLanguage === 'es') {
-        document.querySelector('h1').innerText = 'Calculadora de Costo de Electricidad';
-        document.querySelector('label[for="power"]').innerText = 'Consumo Eléctrico';
-        document.querySelector('label[for="unit"]').innerText = 'Seleccionar Unidad de Potencia';
-        document.querySelector('label[for="time"]').innerText = 'Tiempo de Uso';
-        document.querySelector('label[for="time-unit"]').innerText = 'Seleccionar Unidad de Tiempo';
-        document.querySelector('label[for="price"]').innerHTML = 'Precio por kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calcular';
-      } else if (selectedLanguage === 'fr') {
-        document.querySelector('h1').innerText = 'Calculateur de Coût Électrique';
-        document.querySelector('label[for="power"]').innerText = 'Consommation Électrique';
-        document.querySelector('label[for="unit"]').innerText = 'Sélectionnez l\'Unité de Puissance';
-        document.querySelector('label[for="time"]').innerText = 'Temps d\'Utilisation';
-        document.querySelector('label[for="time-unit"]').innerText = 'Sélectionnez l\'Unité de Temps';
-        document.querySelector('label[for="price"]').innerHTML = 'Prix par kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calculer';
-      } else {
-        document.querySelector('h1').innerText = 'Electricity Cost Calculator';
-        document.querySelector('label[for="power"]').innerText = 'Power Consumption';
-        document.querySelector('label[for="unit"]').innerText = 'Select Power Unit';
-        document.querySelector('label[for="time"]').innerText = 'Time in Use';
-        document.querySelector('label[for="time-unit"]').innerText = 'Select Time Unit';
-        document.querySelector('label[for="price"]').innerHTML = 'Price per kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calculate';
-      }
+      updateTranslations(selectedLanguage);
+      clickSound.play();
     });
+
+
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', () => clickSound.play());
+    });
+
+    
+    detectUserLocale();
   </script>
 
 </body>
