@@ -6,7 +6,6 @@
   <title>Electricity Cost Calculator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <style>
-    
     body {
       background-color: #f8f9fa;
       color: #343a40;
@@ -39,14 +38,36 @@
       font-size: 2rem;
       cursor: pointer;
     }
-
-   
+    #currency-language-selector {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 1rem;
+    }
+    .version {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: gray;
+    }
+    .version a {
+      color: gray;
+      text-decoration: none;
+    }
+    .form-control {
+      background-color: #fff;
+      border: 1px solid #ced4da;
+    }
+    .form-select {
+      background-color: #fff;
+      border: 1px solid #ced4da;
+    }
     body.dark-mode {
-      background-color: #343a40;
+      background-color: #121212;
       color: #f8f9fa;
     }
     .card.dark-mode {
-      background-color: #495057;
+      background-color: #1e1e1e;
       box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
     h1.dark-mode {
@@ -55,15 +76,37 @@
     #result.dark-mode {
       color: #34c759;
     }
+    .form-control.dark-mode {
+      background-color: #333;
+      color: #f8f9fa;
+      border: 1px solid #555;
+    }
+    .form-select.dark-mode {
+      background-color: #333;
+      color: #f8f9fa;
+      border: 1px solid #555;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-   
     <button id="dark-mode-toggle" class="btn">
       ☀️
     </button>
+
+    <div id="currency-language-selector">
+      <select id="currency-selector" class="form-select">
+        <option value="EUR">€ - EUR</option>
+        <option value="USD">$ - USD</option>
+        <option value="GBP">£ - GBP</option>
+      </select>
+      <select id="language-selector" class="form-select mt-2">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+      </select>
+    </div>
 
     <h1>Electricity Cost Calculator</h1>
     <div class="card">
@@ -93,53 +136,54 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="price" class="form-label">Price per kWh (€ or equivalent)</label>
+          <label for="price" class="form-label">Price per kWh (<span id="currency-symbol">€</span>)</label>
           <input type="number" class="form-control" id="price" placeholder="Enter price per kWh" required step="0.0001" min="0">
         </div>
         <button type="submit" class="btn btn-primary w-100">Calculate</button>
       </form>
       <div id="result"></div>
     </div>
+
+    <div class="version">
+      v1.0.0 | <a href="https://github.com/your-username/electricity-cost-calculator" target="_blank">GitHub</a>
+    </div>
   </div>
 
   <script>
-
     const toggleButton = document.getElementById('dark-mode-toggle');
     const body = document.body;
     const result = document.getElementById('result');
     const card = document.querySelector('.card');
     const h1 = document.querySelector('h1');
-    
-    toggleButton.addEventListener('click', function() {
+    const priceInput = document.getElementById('price');
+    const currencySymbol = document.getElementById('currency-symbol');
+    const currencySelector = document.getElementById('currency-selector');
+    const languageSelector = document.getElementById('language-selector');
 
+    toggleButton.addEventListener('click', function() {
       body.classList.toggle('dark-mode');
       card.classList.toggle('dark-mode');
       h1.classList.toggle('dark-mode');
       result.classList.toggle('dark-mode');
-      
-
-      if (toggleButton.textContent === '☀️') {
-        toggleButton.textContent = '🌙';
-      } else {
-        toggleButton.textContent = '☀️';
-      }
+      document.querySelectorAll('.form-control').forEach(input => {
+        input.classList.toggle('dark-mode');
+      });
+      document.querySelectorAll('.form-select').forEach(select => {
+        select.classList.toggle('dark-mode');
+      });
+      toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
     });
-
 
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
-      
-      
       const power = parseFloat(document.getElementById('power').value);
       const unit = document.getElementById('unit').value;
       const time = parseFloat(document.getElementById('time').value);
       const timeUnit = document.getElementById('time-unit').value;
-      const pricePerKwh = parseFloat(document.getElementById('price').value);
-      
-
+      const pricePerKwh = parseFloat(priceInput.value);
       const powerInKw = unit === 'W' ? power / 1000 : power;
-      
       let timeInHours;
+
       if (timeUnit === 'minutes') {
         timeInHours = time / 60;
       } else if (timeUnit === 'hours') {
@@ -149,14 +193,52 @@
       } else if (timeUnit === 'weeks') {
         timeInHours = time * 24 * 7;
       }
-      
+
       const totalConsumption = powerInKw * timeInHours;
-      
       const totalCost = totalConsumption * pricePerKwh;
-      
-      document.getElementById('result').innerText = `Total Cost: €${totalCost.toFixed(2)}`;
+      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${totalCost.toFixed(2)}`;
+    });
+
+    currencySelector.addEventListener('change', function() {
+      const selectedCurrency = currencySelector.value;
+      if (selectedCurrency === 'EUR') {
+        currencySymbol.innerText = '€';
+      } else if (selectedCurrency === 'USD') {
+        currencySymbol.innerText = '$';
+      } else if (selectedCurrency === 'GBP') {
+        currencySymbol.innerText = '£';
+      }
+    });
+
+    languageSelector.addEventListener('change', function() {
+      const selectedLanguage = languageSelector.value;
+      if (selectedLanguage === 'es') {
+        document.querySelector('h1').innerText = 'Calculadora de Costos de Electricidad';
+        document.querySelector('label[for="power"]').innerText = 'Consumo de Energía';
+        document.querySelector('label[for="unit"]').innerText = 'Seleccione la Unidad de Energía';
+        document.querySelector('label[for="time"]').innerText = 'Tiempo de Uso';
+        document.querySelector('label[for="time-unit"]').innerText = 'Seleccione la Unidad de Tiempo';
+        document.querySelector('label[for="price"]').innerHTML = 'Precio por kWh (<span id="currency-symbol">€</span>)';
+        document.querySelector('button[type="submit"]').innerText = 'Calcular';
+      } else if (selectedLanguage === 'fr') {
+        document.querySelector('h1').innerText = 'Calculateur de Coût Électrique';
+        document.querySelector('label[for="power"]').innerText = 'Consommation Électrique';
+        document.querySelector('label[for="unit"]').innerText = 'Sélectionnez l\'Unité de Puissance';
+        document.querySelector('label[for="time"]').innerText = 'Temps d\'Utilisation';
+        document.querySelector('label[for="time-unit"]').innerText = 'Sélectionnez l\'Unité de Temps';
+        document.querySelector('label[for="price"]').innerHTML = 'Prix par kWh (<span id="currency-symbol">€</span>)';
+        document.querySelector('button[type="submit"]').innerText = 'Calculer';
+      } else {
+        document.querySelector('h1').innerText = 'Electricity Cost Calculator';
+        document.querySelector('label[for="power"]').innerText = 'Power Consumption';
+        document.querySelector('label[for="unit"]').innerText = 'Select Power Unit';
+        document.querySelector('label[for="time"]').innerText = 'Time in Use';
+        document.querySelector('label[for="time-unit"]').innerText = 'Select Time Unit';
+        document.querySelector('label[for="price"]').innerHTML = 'Price per kWh (<span id="currency-symbol">€</span>)';
+        document.querySelector('button[type="submit"]').innerText = 'Calculate';
+      }
     });
   </script>
-  
+
 </body>
 </html>
