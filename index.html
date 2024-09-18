@@ -70,7 +70,6 @@
     }
     .card.dark-mode {
       background-color: #1e1e1e;
-      color: #f8f9fa;
     }
     h1.dark-mode, label.dark-mode, button.dark-mode {
       color: #f8f9fa;
@@ -86,11 +85,28 @@
     .form-control::placeholder, .form-select::placeholder {
       color: #f8f9fa;
     }
+    #google_translate_element {
+      margin: 10px 0;
+    }
   </style>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,es,fr,de,zh',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
 
   <div class="container">
+   
+    <div id="google_translate_element"></div>
+
     <button id="dark-mode-toggle" class="btn">
       ☀️
     </button>
@@ -166,12 +182,6 @@
 
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
-    const translations = {
-      en: { minutes: 'Minutes', hours: 'Hours', days: 'Days', weeks: 'Weeks' },
-      es: { minutes: 'Minutos', hours: 'Horas', days: 'Días', weeks: 'Semanas' },
-      fr: { minutes: 'Minutes', hours: 'Heures', days: 'Jours', weeks: 'Semaines' }
-    };
-
     function toggleDarkMode() {
       clickSound.play();
       body.classList.toggle('dark-mode');
@@ -183,24 +193,10 @@
       formSelects.forEach(select => select.classList.toggle('dark-mode'));
       formLabels.forEach(label => label.classList.toggle('dark-mode'));
       submitButton.classList.toggle('dark-mode');
-      toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
+      toggleButton.textContent = toggleButton.textContent === '🌙' ? '☀️' : '☀️';
     }
 
     toggleButton.addEventListener('click', toggleDarkMode);
-
-    function updateTranslations(language) {
-      document.querySelector('h1').innerText = translations[language].calculatorTitle || 'Electricity Cost Calculator';
-      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || 'Power Consumption';
-      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || 'Select Power Unit';
-      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || 'Time in Use';
-      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || 'Select Time Unit';
-      document.querySelector('label[for="price"]').innerHTML = `Price per kWh (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
-      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || 'Calculate';
-
-      Array.from(timeUnitSelect.options).forEach(option => {
-        option.innerText = translations[language][option.value] || option.value;
-      });
-    }
 
     function detectUserLocale() {
       const userLang = navigator.language || 'en';
@@ -218,7 +214,6 @@
         currencySelector.value = 'USD';
         currencySymbol.innerText = '$';
       }
-      updateTranslations(languageSelector.value);
     }
 
     function updateCurrency(currency) {
@@ -231,8 +226,6 @@
       }
       clickSound.play();
     }
-
-    toggleButton.addEventListener('click', toggleDarkMode);
 
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
@@ -267,7 +260,7 @@
 
     languageSelector.addEventListener('change', function() {
       const selectedLanguage = languageSelector.value;
-      updateTranslations(selectedLanguage);
+      detectUserLocale();
       clickSound.play();
     });
 
