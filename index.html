@@ -166,7 +166,7 @@
     const currencySelector = document.getElementById('currency-selector');
     const languageSelector = document.getElementById('language-selector');
 
-    let clickSound = new Audio('https://freesound.org/data/previews/351/351603_2815274-lq.mp3'); 
+    let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
     toggleButton.addEventListener('click', function() {
       clickSound.play();
@@ -208,7 +208,7 @@
       const totalCost = totalConsumption * pricePerKwh;
       const formattedCost = totalCost.toFixed(2);
       const fullCost = totalCost.toFixed(5);
-      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost} | [${currencySymbol.innerText}${fullCost}]`;
+      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost} `;
     });
 
     currencySelector.addEventListener('change', function() {
