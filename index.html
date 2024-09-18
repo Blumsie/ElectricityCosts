@@ -20,6 +20,7 @@
     .card {
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
       transition: background-color 0.5s ease, color 0.5s ease;
     }
     h1 {
@@ -64,12 +65,16 @@
     .form-control, .form-select, .form-label, button {
       transition: background-color 0.5s ease, color 0.5s ease;
     }
+    .form-control::placeholder, .form-select::placeholder {
+      transition: color 0.5s ease;
+    }
     body.dark-mode {
       background-color: #121212;
       color: #f8f9fa;
     }
     .card.dark-mode {
       background-color: #1e1e1e;
+      color: #f8f9fa;
     }
     h1.dark-mode, label.dark-mode, button.dark-mode {
       color: #f8f9fa;
@@ -83,30 +88,28 @@
       border: 1px solid #555;
     }
     .form-control::placeholder, .form-select::placeholder {
+      color: #888;
+    }
+    body.dark-mode .form-control::placeholder, body.dark-mode .form-select::placeholder {
       color: #f8f9fa;
     }
-    #google_translate_element {
-      margin: 10px 0;
+    label {
+      font-weight: 500;
+    }
+    body.dark-mode label {
+      color: #f8f9fa;
+    }
+    button {
+      color: #fff;
+    }
+    body.dark-mode button {
+      color: #fff;
     }
   </style>
-
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'en,es,fr,de,zh',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }
-  </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
 
   <div class="container">
-   
-    <div id="google_translate_element"></div>
-
     <button id="dark-mode-toggle" class="btn">
       ☀️
     </button>
@@ -182,6 +185,12 @@
 
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
+    const translations = {
+      en: { minutes: 'Minutes', hours: 'Hours', days: 'Days', weeks: 'Weeks' },
+      es: { minutes: 'Minutos', hours: 'Horas', days: 'Días', weeks: 'Semanas' },
+      fr: { minutes: 'Minutes', hours: 'Heures', days: 'Jours', weeks: 'Semaines' }
+    };
+
     function toggleDarkMode() {
       clickSound.play();
       body.classList.toggle('dark-mode');
@@ -193,10 +202,24 @@
       formSelects.forEach(select => select.classList.toggle('dark-mode'));
       formLabels.forEach(label => label.classList.toggle('dark-mode'));
       submitButton.classList.toggle('dark-mode');
-      toggleButton.textContent = toggleButton.textContent === '🌙' ? '☀️' : '☀️';
+      toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
     }
 
     toggleButton.addEventListener('click', toggleDarkMode);
+
+    function updateTranslations(language) {
+      document.querySelector('h1').innerText = translations[language].calculatorTitle || 'Electricity Cost Calculator';
+      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || 'Power Consumption';
+      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || 'Select Power Unit';
+      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || 'Time in Use';
+      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || 'Select Time Unit';
+      document.querySelector('label[for="price"]').innerHTML = `Price per kWh (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
+      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || 'Calculate';
+
+      Array.from(timeUnitSelect.options).forEach(option => {
+        option.innerText = translations[language][option.value] || option.value;
+      });
+    }
 
     function detectUserLocale() {
       const userLang = navigator.language || 'en';
@@ -214,6 +237,7 @@
         currencySelector.value = 'USD';
         currencySymbol.innerText = '$';
       }
+      updateTranslations(languageSelector.value);
     }
 
     function updateCurrency(currency) {
@@ -260,7 +284,7 @@
 
     languageSelector.addEventListener('change', function() {
       const selectedLanguage = languageSelector.value;
-      detectUserLocale();
+      updateTranslations(selectedLanguage);
       clickSound.play();
     });
 
