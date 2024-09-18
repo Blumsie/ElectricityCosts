@@ -87,9 +87,7 @@
 <body>
 
   <div class="container">
-    <button id="dark-mode-toggle" class="btn">
-      ☀️
-    </button>
+    <button id="dark-mode-toggle" class="btn">☀️</button>
 
     <div id="currency-language-selector">
       <select id="currency-selector" class="form-select">
@@ -104,149 +102,134 @@
       </select>
     </div>
 
-    <h1>Electricity Cost Calculator</h1>
+    <h1 data-i18n="calculatorTitle">Electricity Cost Calculator</h1>
     <div class="card">
       <form id="calculator-form">
         <div class="mb-3">
-          <label for="power" class="form-label">Power Consumption</label>
+          <label for="power" class="form-label" data-i18n="powerLabel">Power Consumption</label>
           <input type="number" class="form-control" id="power" placeholder="Enter power consumption" required>
         </div>
         <div class="mb-3">
-          <label for="unit" class="form-label">Select Power Unit</label>
+          <label for="unit" class="form-label" data-i18n="unitLabel">Select Power Unit</label>
           <select class="form-select" id="unit">
-            <option value="W">Watts (W)</option>
-            <option value="kW">Kilowatts (kW)</option>
+            <option value="W" data-i18n="unitWatts">Watts (W)</option>
+            <option value="kW" data-i18n="unitKilowatts">Kilowatts (kW)</option>
           </select>
         </div>
         <div class="mb-3">
-          <label for="time" class="form-label">Time in Use</label>
+          <label for="time" class="form-label" data-i18n="timeLabel">Time in Use</label>
           <input type="number" class="form-control" id="time" placeholder="Enter duration" required>
         </div>
         <div class="mb-3">
-          <label for="time-unit" class="form-label">Select Time Unit</label>
+          <label for="time-unit" class="form-label" data-i18n="timeUnitLabel">Select Time Unit</label>
           <select class="form-select" id="time-unit">
-            <option value="minutes">Minutes</option>
-            <option value="hours">Hours</option>
-            <option value="days">Days</option>
-            <option value="weeks">Weeks</option>
+            <option value="minutes" data-i18n="timeMinutes">Minutes</option>
+            <option value="hours" data-i18n="timeHours">Hours</option>
+            <option value="days" data-i18n="timeDays">Days</option>
+            <option value="weeks" data-i18n="timeWeeks">Weeks</option>
           </select>
         </div>
         <div class="mb-3">
-          <label for="price" class="form-label">Price per kWh (<span id="currency-symbol">€</span>)</label>
+          <label for="price" class="form-label" data-i18n="priceLabel">Price per kWh (<span id="currency-symbol">€</span>)</label>
           <input type="number" class="form-control" id="price" placeholder="Enter price per kWh" required step="0.0001" min="0">
         </div>
-        <button type="submit" class="btn btn-primary w-100">Calculate</button>
+        <button type="submit" class="btn btn-primary w-100" data-i18n="calculateButton">Calculate</button>
       </form>
       <div id="result"></div>
     </div>
 
     <div class="version">
-      v1.1.3 | <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
+      v1.1.3 | <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤</a>
     </div>
   </div>
 
   <script>
-    const toggleButton = document.getElementById('dark-mode-toggle');
-    const body = document.body;
-    const result = document.getElementById('result');
-    const card = document.querySelector('.card');
-    const h1 = document.querySelector('h1');
-    const formLabels = document.querySelectorAll('.form-label');
-    const formControls = document.querySelectorAll('.form-control');
-    const formSelects = document.querySelectorAll('.form-select');
-    const submitButton = document.querySelector('button[type="submit"]');
-    const currencySymbol = document.getElementById('currency-symbol');
-    const currencySelector = document.getElementById('currency-selector');
-    const languageSelector = document.getElementById('language-selector');
-
-    let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
-
     
-    function toggleDarkMode() {
-      clickSound.play();
-      body.classList.toggle('dark-mode');
-      card.classList.toggle('dark-mode');
-      h1.classList.toggle('dark-mode');
-      result.classList.toggle('dark-mode');
-      
-      formControls.forEach(input => input.classList.toggle('dark-mode'));
-      formSelects.forEach(select => select.classList.toggle('dark-mode'));
-      formLabels.forEach(label => label.classList.toggle('dark-mode'));
-      submitButton.classList.toggle('dark-mode');
-      toggleButton.textContent = toggleButton.textContent === '☀️' ? '🌙' : '☀️';
+    i18next
+      .use(i18nextBrowserLanguageDetector)
+      .init({
+        resources: {
+          en: {
+            translation: {
+              "calculatorTitle": "Electricity Cost Calculator",
+              "powerLabel": "Power Consumption",
+              "unitLabel": "Select Power Unit",
+              "unitWatts": "Watts (W)",
+              "unitKilowatts": "Kilowatts (kW)",
+              "timeLabel": "Time in Use",
+              "timeUnitLabel": "Select Time Unit",
+              "timeMinutes": "Minutes",
+              "timeHours": "Hours",
+              "timeDays": "Days",
+              "timeWeeks": "Weeks",
+              "priceLabel": "Price per kWh",
+              "calculateButton": "Calculate"
+            }
+          },
+          es: {
+            translation: {
+              "calculatorTitle": "Calculadora de Costo de Electricidad",
+              "powerLabel": "Consumo Eléctrico",
+              "unitLabel": "Seleccionar Unidad de Potencia",
+              "unitWatts": "Vatios (W)",
+              "unitKilowatts": "Kilovatios (kW)",
+              "timeLabel": "Tiempo de Uso",
+              "timeUnitLabel": "Seleccionar Unidad de Tiempo",
+              "timeMinutes": "Minutos",
+              "timeHours": "Horas",
+              "timeDays": "Días",
+              "timeWeeks": "Semanas",
+              "priceLabel": "Precio por kWh",
+              "calculateButton": "Calcular"
+            }
+          },
+          fr: {
+            translation: {
+              "calculatorTitle": "Calculateur de Coût Électrique",
+              "powerLabel": "Consommation Électrique",
+              "unitLabel": "Sélectionner l'Unité de Puissance",
+              "unitWatts": "Watts (W)",
+              "unitKilowatts": "Kilowatts (kW)",
+              "timeLabel": "Temps d'Utilisation",
+              "timeUnitLabel": "Sélectionner l'Unité de Temps",
+              "timeMinutes": "Minutes",
+              "timeHours": "Heures",
+              "timeDays": "Jours",
+              "timeWeeks": "Semaines",
+              "priceLabel": "Prix par kWh",
+              "calculateButton": "Calculer"
+            }
+          }
+        },
+        lng: 'en', 
+        fallbackLng: 'en',
+        debug: true
+      }, function(err, t) {
+        if (err) return console.error(err);
+        updateContent();
+      });
+
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.innerText = i18next.t(el.getAttribute('data-i18n'));
+      });
     }
 
-    
-    toggleButton.addEventListener('click', toggleDarkMode);
-
-    
-    document.getElementById('calculator-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      clickSound.play();
-      const power = parseFloat(document.getElementById('power').value);
-      const unit = document.getElementById('unit').value;
-      const time = parseFloat(document.getElementById('time').value);
-      const timeUnit = document.getElementById('time-unit').value;
-      const pricePerKwh = parseFloat(document.getElementById('price').value);
-      const powerInKw = unit === 'W' ? power / 1000 : power;
-      let timeInHours;
-
-      if (timeUnit === 'minutes') {
-        timeInHours = time / 60;
-      } else if (timeUnit === 'hours') {
-        timeInHours = time;
-      } else if (timeUnit === 'days') {
-        timeInHours = time * 24;
-      } else if (timeUnit === 'weeks') {
-        timeInHours = time * 24 * 7;
-      }
-
-      const totalConsumption = powerInKw * timeInHours;
-      const totalCost = totalConsumption * pricePerKwh;
-      const formattedCost = totalCost.toFixed(2);
-      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost}`;
+    document.getElementById('language-selector').addEventListener('change', function(event) {
+      const selectedLanguage = event.target.value;
+      i18next.changeLanguage(selectedLanguage, function(err, t) {
+        if (err) return console.error(err);
+        updateContent();
+      });
     });
 
-    
-    currencySelector.addEventListener('change', function() {
-      const selectedCurrency = currencySelector.value;
-      if (selectedCurrency === 'EUR') {
-        currencySymbol.innerText = '€';
-      } else if (selectedCurrency === 'USD') {
-        currencySymbol.innerText = '$';
-      } else if (selectedCurrency === 'GBP') {
-        currencySymbol.innerText = '£';
-      }
-    });
-
- 
-    languageSelector.addEventListener('change', function() {
-      const selectedLanguage = languageSelector.value;
-      if (selectedLanguage === 'es') {
-        document.querySelector('h1').innerText = 'Calculadora de Costo de Electricidad';
-        document.querySelector('label[for="power"]').innerText = 'Consumo Eléctrico';
-        document.querySelector('label[for="unit"]').innerText = 'Seleccionar Unidad de Potencia';
-        document.querySelector('label[for="time"]').innerText = 'Tiempo de Uso';
-        document.querySelector('label[for="time-unit"]').innerText = 'Seleccionar Unidad de Tiempo';
-        document.querySelector('label[for="price"]').innerHTML = 'Precio por kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calcular';
-      } else if (selectedLanguage === 'fr') {
-        document.querySelector('h1').innerText = 'Calculateur de Coût Électrique';
-        document.querySelector('label[for="power"]').innerText = 'Consommation Électrique';
-        document.querySelector('label[for="unit"]').innerText = 'Sélectionnez l\'Unité de Puissance';
-        document.querySelector('label[for="time"]').innerText = 'Temps d\'Utilisation';
-        document.querySelector('label[for="time-unit"]').innerText = 'Sélectionnez l\'Unité de Temps';
-        document.querySelector('label[for="price"]').innerHTML = 'Prix par kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calculer';
-      } else {
-        document.querySelector('h1').innerText = 'Electricity Cost Calculator';
-        document.querySelector('label[for="power"]').innerText = 'Power Consumption';
-        document.querySelector('label[for="unit"]').innerText = 'Select Power Unit';
-        document.querySelector('label[for="time"]').innerText = 'Time in Use';
-        document.querySelector('label[for="time-unit"]').innerText = 'Select Time Unit';
-        document.querySelector('label[for="price"]').innerHTML = 'Price per kWh (<span id="currency-symbol">€</span>)';
-        document.querySelector('button[type="submit"]').innerText = 'Calculate';
-      }
+   
+    document.addEventListener('DOMContentLoaded', () => {
+      const userLang = navigator.language || navigator.userLanguage;
+      i18next.changeLanguage(userLang.split('-')[0], function(err, t) {
+        if (err) return console.error(err);
+        updateContent();
+      });
     });
   </script>
 
