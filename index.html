@@ -186,11 +186,46 @@
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
     let ErrorSound = new Audio('https://cdn.freesound.org/previews/327/327737_3694529-lq.mp3'); 
 
-
     const translations = {
-      en: { minutes: 'Minutes', hours: 'Hours', days: 'Days', weeks: 'Weeks' },
-      es: { minutes: 'Minutos', hours: 'Horas', days: 'Días', weeks: 'Semanas' },
-      fr: { minutes: 'Minutes', hours: 'Heures', days: 'Jours', weeks: 'Semaines' }
+      en: { 
+        calculatorTitle: 'Electricity Cost Calculator',
+        powerLabel: 'Power Consumption',
+        unitLabel: 'Select Power Unit',
+        timeLabel: 'Time in Use',
+        timeUnitLabel: 'Select Time Unit',
+        priceLabel: 'Price per kWh',
+        calculateButton: 'Calculate',
+        minutes: 'Minutes',
+        hours: 'Hours',
+        days: 'Days',
+        weeks: 'Weeks'
+      },
+      es: { 
+        calculatorTitle: 'Calculadora de Costos de Electricidad',
+        powerLabel: 'Consumo de Energía',
+        unitLabel: 'Seleccionar Unidad de Potencia',
+        timeLabel: 'Tiempo en Uso',
+        timeUnitLabel: 'Seleccionar Unidad de Tiempo',
+        priceLabel: 'Precio por kWh',
+        calculateButton: 'Calcular',
+        minutes: 'Minutos',
+        hours: 'Horas',
+        days: 'Días',
+        weeks: 'Semanas'
+      },
+      fr: { 
+        calculatorTitle: 'Calculatrice de Coût d’Électricité',
+        powerLabel: 'Consommation d’Énergie',
+        unitLabel: 'Sélectionner l’Unité de Puissance',
+        timeLabel: 'Temps d’Utilisation',
+        timeUnitLabel: 'Sélectionner l’Unité de Temps',
+        priceLabel: 'Prix par kWh',
+        calculateButton: 'Calculer',
+        minutes: 'Minutes',
+        hours: 'Heures',
+        days: 'Jours',
+        weeks: 'Semaines'
+      }
     };
 
     function toggleDarkMode() {
@@ -210,16 +245,16 @@
     toggleButton.addEventListener('click', toggleDarkMode);
 
     function updateTranslations(language) {
-      document.querySelector('h1').innerText = translations[language].calculatorTitle || 'Electricity Cost Calculator';
-      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || 'Power Consumption';
-      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || 'Select Power Unit';
-      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || 'Time in Use';
-      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || 'Select Time Unit';
-      document.querySelector('label[for="price"]').innerHTML = `Price per kWh (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
-      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || 'Calculate';
+      document.querySelector('h1').innerText = translations[language].calculatorTitle || translations.en.calculatorTitle;
+      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || translations.en.powerLabel;
+      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || translations.en.unitLabel;
+      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || translations.en.timeLabel;
+      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || translations.en.timeUnitLabel;
+      document.querySelector('label[for="price"]').innerHTML = `${translations[language].priceLabel || translations.en.priceLabel} (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
+      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || translations.en.calculateButton;
 
       Array.from(timeUnitSelect.options).forEach(option => {
-        option.innerText = translations[language][option.value] || option.value;
+        option.innerText = translations[language][option.value] || translations.en[option.value];
       });
     }
 
