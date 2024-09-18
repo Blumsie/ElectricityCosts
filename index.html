@@ -70,6 +70,7 @@
     }
     .card.dark-mode {
       background-color: #1e1e1e;
+      color: #f8f9fa;
     }
     h1.dark-mode, label.dark-mode, button.dark-mode {
       color: #f8f9fa;
@@ -165,7 +166,6 @@
 
     let clickSound = new Audio('https://cdn.freesound.org/previews/342/342200_3908740-lq.mp3'); 
 
-   
     const translations = {
       en: { minutes: 'Minutes', hours: 'Hours', days: 'Days', weeks: 'Weeks' },
       es: { minutes: 'Minutos', hours: 'Horas', days: 'Días', weeks: 'Semanas' },
@@ -197,7 +197,6 @@
       document.querySelector('label[for="price"]').innerHTML = `Price per kWh (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
       document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || 'Calculate';
 
-      
       Array.from(timeUnitSelect.options).forEach(option => {
         option.innerText = translations[language][option.value] || option.value;
       });
@@ -272,12 +271,10 @@
       clickSound.play();
     });
 
-
     document.querySelectorAll('button').forEach(button => {
       button.addEventListener('click', () => clickSound.play());
     });
 
-    
     detectUserLocale();
   </script>
 
