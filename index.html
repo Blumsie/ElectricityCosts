@@ -9,6 +9,7 @@
     body {
       background-color: #f8f9fa;
       color: #343a40;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
     .container {
       margin-top: 50px;
@@ -17,17 +18,20 @@
     .card {
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
     h1 {
       text-align: center;
       margin-bottom: 30px;
       color: #343a40;
+      transition: color 0.5s ease;
     }
     #result {
       margin-top: 20px;
       font-size: 1.5rem;
       color: #28a745;
       text-align: center;
+      transition: color 0.5s ease;
     }
     #dark-mode-toggle {
       position: absolute;
@@ -47,20 +51,23 @@
     .version {
       margin-top: 20px;
       text-align: center;
-      font-size: 0.9rem;
-      color: gray;
+      font-size: 1rem;
+      font-weight: bold;
     }
     .version a {
-      color: gray;
+      font-weight: bold;
       text-decoration: none;
+      color: inherit;
     }
     .form-control {
       background-color: #fff;
       border: 1px solid #ced4da;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
     .form-select {
       background-color: #fff;
       border: 1px solid #ced4da;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
     body.dark-mode {
       background-color: #121212;
@@ -68,7 +75,6 @@
     }
     .card.dark-mode {
       background-color: #1e1e1e;
-      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
     h1.dark-mode {
       color: #f8f9fa;
@@ -145,7 +151,7 @@
     </div>
 
     <div class="version">
-      v1.0.0 | <a href="https://github.com/your-username/electricity-cost-calculator" target="_blank">GitHub</a>
+      v1.0.0 | <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
     </div>
   </div>
 
@@ -160,7 +166,10 @@
     const currencySelector = document.getElementById('currency-selector');
     const languageSelector = document.getElementById('language-selector');
 
+    let clickSound = new Audio('https://freesound.org/data/previews/351/351603_2815274-lq.mp3'); 
+
     toggleButton.addEventListener('click', function() {
+      clickSound.play();
       body.classList.toggle('dark-mode');
       card.classList.toggle('dark-mode');
       h1.classList.toggle('dark-mode');
@@ -176,6 +185,7 @@
 
     document.getElementById('calculator-form').addEventListener('submit', function(event) {
       event.preventDefault();
+      clickSound.play();
       const power = parseFloat(document.getElementById('power').value);
       const unit = document.getElementById('unit').value;
       const time = parseFloat(document.getElementById('time').value);
@@ -196,7 +206,9 @@
 
       const totalConsumption = powerInKw * timeInHours;
       const totalCost = totalConsumption * pricePerKwh;
-      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${totalCost.toFixed(2)}`;
+      const formattedCost = totalCost.toFixed(2);
+      const fullCost = totalCost.toFixed(5);
+      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost} | [${currencySymbol.innerText}${fullCost}]`;
     });
 
     currencySelector.addEventListener('change', function() {
@@ -213,11 +225,11 @@
     languageSelector.addEventListener('change', function() {
       const selectedLanguage = languageSelector.value;
       if (selectedLanguage === 'es') {
-        document.querySelector('h1').innerText = 'Calculadora de Costos de Electricidad';
-        document.querySelector('label[for="power"]').innerText = 'Consumo de Energía';
-        document.querySelector('label[for="unit"]').innerText = 'Seleccione la Unidad de Energía';
+        document.querySelector('h1').innerText = 'Calculadora de Costo de Electricidad';
+        document.querySelector('label[for="power"]').innerText = 'Consumo Eléctrico';
+        document.querySelector('label[for="unit"]').innerText = 'Seleccionar Unidad de Potencia';
         document.querySelector('label[for="time"]').innerText = 'Tiempo de Uso';
-        document.querySelector('label[for="time-unit"]').innerText = 'Seleccione la Unidad de Tiempo';
+        document.querySelector('label[for="time-unit"]').innerText = 'Seleccionar Unidad de Tiempo';
         document.querySelector('label[for="price"]').innerHTML = 'Precio por kWh (<span id="currency-symbol">€</span>)';
         document.querySelector('button[type="submit"]').innerText = 'Calcular';
       } else if (selectedLanguage === 'fr') {
