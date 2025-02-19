@@ -243,13 +243,18 @@
     <div class="dropdown-content" id="dropdownContent">
       <a href="https://www.apaga-luz.com/" target="_blank">Ir a apaga-luz para ver los precios.</a>
     </div>
-    dropdownButton.addEventListener('click', function() {
-  clickSound.play();
-  dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-});
+    
   </div>
 
   <script>
+    const dropdownButton = document.getElementById('dropdownButton');
+  const dropdownContent = document.getElementById('dropdownContent');
+
+  dropdownButton.addEventListener('click', function() {
+    clickSound.play();
+    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+  });
+
     const toggleButton = document.getElementById('dark-mode-toggle');
     const body = document.body;
     const result = document.getElementById('result');
