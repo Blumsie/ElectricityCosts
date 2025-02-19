@@ -106,7 +106,7 @@
       color: #fff;
     }
 
-    /* Dropdown Button Styles */
+
     .dropdown-container {
       position: fixed;
       bottom: 20px;
@@ -160,7 +160,6 @@
       display: block;
     }
 
-    /* Dark mode adjustment */
     body.dark-mode .dropdown-button {
       background-color: #444;
       color: #fff;
@@ -237,14 +236,12 @@
       <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
     </div>
   </div>
-
-  <!-- Dropdown Button -->
   <div class="dropdown-container">
     <button id="dropdownButton" class="dropdown-button">
-      Open Menu
+      Precio Kwh (SPAIN ONLY)
     </button>
     <div class="dropdown-content" id="dropdownContent">
-      <a href="https://example.com" target="_blank">Go to Example</a>
+      <a href="https://www.apaga-luz.com/" target="_blank">Ir a apaga-luz para ver los precios.</a>
     </div>
   </div>
 
@@ -352,7 +349,7 @@
 
     languageSelector.addEventListener('change', (e) => changeLanguage(e.target.value));
 
-    // Currency change
+
     currencySelector.addEventListener('change', (e) => {
       let currency = e.target.value;
       switch(currency) {
@@ -367,8 +364,7 @@
           break;
       }
     });
-    
-    // Calculate electricity cost
+
     document.getElementById('calculator-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const power = parseFloat(document.getElementById('power').value);
@@ -394,7 +390,7 @@
         } else if (timeUnit === 'days') {
           cost *= time * 24;
         } else if (timeUnit === 'weeks') {
-          cost *= time * 168; // 7 days * 24 hours
+          cost *= time * 168; 
         }
 
         result.textContent = `Total cost: ${currencySymbol.textContent}${cost.toFixed(2)}`;
