@@ -105,6 +105,76 @@
     body.dark-mode button {
       color: #fff;
     }
+
+    /* Dropdown Button Styles */
+    .dropdown-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 999;
+    }
+
+    .dropdown-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      min-width: 200px;
+      padding: 10px;
+    }
+
+    .dropdown-content a {
+      text-decoration: none;
+      color: #007bff;
+      padding: 10px;
+      display: block;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown-button:focus + .dropdown-content,
+    .dropdown-content:hover {
+      display: block;
+    }
+
+    /* Dark mode adjustment */
+    body.dark-mode .dropdown-button {
+      background-color: #444;
+      color: #fff;
+    }
+
+    body.dark-mode .dropdown-content {
+      background-color: #333;
+      color: #fff;
+    }
+
+    body.dark-mode .dropdown-content a {
+      color: #aaa;
+    }
+
   </style>
 </head>
 <body>
@@ -165,6 +235,16 @@
 
     <div class="version">
       <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
+    </div>
+  </div>
+
+  <!-- Dropdown Button -->
+  <div class="dropdown-container">
+    <button id="dropdownButton" class="dropdown-button">
+      Open Menu
+    </button>
+    <div class="dropdown-content" id="dropdownContent">
+      <a href="https://example.com" target="_blank">Go to Example</a>
     </div>
   </div>
 
@@ -248,101 +328,80 @@
       formSelects.forEach(select => select.classList.toggle('dark-mode'));
       formLabels.forEach(label => label.classList.toggle('dark-mode'));
       submitButton.classList.toggle('dark-mode');
-      toggleButton.textContent = toggleButton.textContent === '🌙' ? '☀️' : '🌙';
+      toggleButton.textContent = body.classList.contains('dark-mode') ? '🌙' : '☀️';
     }
 
     toggleButton.addEventListener('click', toggleDarkMode);
 
-    function updateTranslations(language) {
-      document.querySelector('h1').innerText = translations[language].calculatorTitle || translations.en.calculatorTitle;
-      document.querySelector('label[for="power"]').innerText = translations[language].powerLabel || translations.en.powerLabel;
-      document.querySelector('label[for="unit"]').innerText = translations[language].unitLabel || translations.en.unitLabel;
-      document.querySelector('label[for="time"]').innerText = translations[language].timeLabel || translations.en.timeLabel;
-      document.querySelector('label[for="time-unit"]').innerText = translations[language].timeUnitLabel || translations.en.timeUnitLabel;
-      document.querySelector('label[for="price"]').innerHTML = `${translations[language].priceLabel || translations.en.priceLabel} (<span id="currency-symbol">${currencySymbol.innerText}</span>)`;
-      document.querySelector('button[type="submit"]').innerText = translations[language].calculateButton || translations.en.calculateButton;
-      
-      document.getElementById('power').placeholder = translations[language].powerPlaceholder || translations.en.powerPlaceholder;
-      document.getElementById('time').placeholder = translations[language].timePlaceholder || translations.en.timePlaceholder;
-      document.getElementById('price').placeholder = translations[language].pricePlaceholder || translations.en.pricePlaceholder;
-
-      Array.from(timeUnitSelect.options).forEach(option => {
-        option.innerText = translations[language][option.value] || translations.en[option.value];
-      });
+    function changeLanguage(language) {
+      document.querySelector('h1').textContent = translations[language].calculatorTitle;
+      document.querySelector('label[for="power"]').textContent = translations[language].powerLabel;
+      document.querySelector('label[for="unit"]').textContent = translations[language].unitLabel;
+      document.querySelector('label[for="time"]').textContent = translations[language].timeLabel;
+      document.querySelector('label[for="time-unit"]').textContent = translations[language].timeUnitLabel;
+      document.querySelector('label[for="price"]').textContent = translations[language].priceLabel;
+      document.querySelector('button[type="submit"]').textContent = translations[language].calculateButton;
+      document.getElementById('power').placeholder = translations[language].powerPlaceholder;
+      document.getElementById('time').placeholder = translations[language].timePlaceholder;
+      document.getElementById('price').placeholder = translations[language].pricePlaceholder;
+      timeUnitSelect.querySelector('option[value="minutes"]').textContent = translations[language].minutes;
+      timeUnitSelect.querySelector('option[value="hours"]').textContent = translations[language].hours;
+      timeUnitSelect.querySelector('option[value="days"]').textContent = translations[language].days;
+      timeUnitSelect.querySelector('option[value="weeks"]').textContent = translations[language].weeks;
     }
 
-    function detectUserLocale() {
-      const userLang = navigator.language || 'en';
-      const language = userLang.split('-')[0]; 
-      if (language === 'es') {
-        languageSelector.value = 'es';
-        currencySelector.value = 'EUR';
-        currencySymbol.innerText = '€';
-      } else if (language === 'fr') {
-        languageSelector.value = 'fr';
-        currencySelector.value = 'EUR';
-        currencySymbol.innerText = '€';
-      } else {
-        languageSelector.value = 'en';
-        currencySelector.value = 'USD';
-        currencySymbol.innerText = '$';
+    languageSelector.addEventListener('change', (e) => changeLanguage(e.target.value));
+
+    // Currency change
+    currencySelector.addEventListener('change', (e) => {
+      let currency = e.target.value;
+      switch(currency) {
+        case 'EUR':
+          currencySymbol.textContent = '€';
+          break;
+        case 'USD':
+          currencySymbol.textContent = '$';
+          break;
+        case 'GBP':
+          currencySymbol.textContent = '£';
+          break;
       }
-      updateTranslations(languageSelector.value);
-    }
-
-    function updateCurrency(currency) {
-      if (currency === 'EUR') {
-        currencySymbol.innerText = '€';
-      } else if (currency === 'USD') {
-        currencySymbol.innerText = '$';
-      } else if (currency === 'GBP') {
-        currencySymbol.innerText = '£';
-      }
-      clickSound.play();
-    }
-
-    document.getElementById('calculator-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      clickSound.play();
+    });
+    
+    // Calculate electricity cost
+    document.getElementById('calculator-form').addEventListener('submit', function(e) {
+      e.preventDefault();
       const power = parseFloat(document.getElementById('power').value);
-      const unit = document.getElementById('unit').value;
       const time = parseFloat(document.getElementById('time').value);
+      const price = parseFloat(document.getElementById('price').value);
       const timeUnit = document.getElementById('time-unit').value;
-      const pricePerKwh = parseFloat(document.getElementById('price').value);
-      const powerInKw = unit === 'W' ? power / 1000 : power;
-      let timeInHours;
 
-      if (timeUnit === 'minutes') {
-        timeInHours = time / 60;
-      } else if (timeUnit === 'hours') {
-        timeInHours = time;
-      } else if (timeUnit === 'days') {
-        timeInHours = time * 24;
-      } else if (timeUnit === 'weeks') {
-        timeInHours = time * 24 * 7;
+      if (isNaN(power) || isNaN(time) || isNaN(price)) {
+        ErrorSound.play();
+        result.textContent = 'Please fill in all fields correctly.';
+        result.classList.add('text-danger');
+      } else {
+        let consumption = power * time;
+        if (document.getElementById('unit').value === 'kW') {
+          consumption *= 1000;
+        }
+        let cost = (consumption / 1000) * price;
+
+        if (timeUnit === 'minutes') {
+          cost *= (time / 60);
+        } else if (timeUnit === 'hours') {
+          cost *= time;
+        } else if (timeUnit === 'days') {
+          cost *= time * 24;
+        } else if (timeUnit === 'weeks') {
+          cost *= time * 168; // 7 days * 24 hours
+        }
+
+        result.textContent = `Total cost: ${currencySymbol.textContent}${cost.toFixed(2)}`;
+        result.classList.remove('text-danger');
+        result.classList.add('text-success');
       }
-
-      const totalConsumption = powerInKw * timeInHours;
-      const totalCost = totalConsumption * pricePerKwh;
-      const formattedCost = totalCost.toFixed(2);
-      document.getElementById('result').innerText = `Total Cost: ${currencySymbol.innerText}${formattedCost}`;
     });
-
-    currencySelector.addEventListener('change', function() {
-      updateCurrency(currencySelector.value);
-    });
-
-    languageSelector.addEventListener('change', function() {
-      const selectedLanguage = languageSelector.value;
-      updateTranslations(selectedLanguage);
-      clickSound.play();
-    });
-
-    document.querySelectorAll('button').forEach(button => {
-      button.addEventListener('click', () => clickSound.play());
-    });
-
-    detectUserLocale();
   </script>
 
 </body>
