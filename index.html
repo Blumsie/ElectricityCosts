@@ -167,6 +167,55 @@
       <a href="https://github.com/blarss/ElectricityCosts" target="_blank">Made with ❤ </a>
     </div>
   </div>
+    <div class="card mt-3">
+      <h3>Precio Promedio del Día</h3>
+      <p id="average-price">Cargando...</p>
+    </div>
+
+    <div class="card mt-3">
+      <h3>Precios por Hora</h3>
+      <ul id="price-list"></ul>
+    </div>
+
+    <script>
+      async function fetchElectricityPrices() {
+        try {
+          const response = await fetch('https://api.preciodelaluz.org/v1/prices/all');
+          if (!response.ok) {
+            throw new Error('Error al obtener los datos de la API');
+          }
+          const data = await response.json();
+
+          // Obtener el precio actual
+          const now = new Date();
+          const currentHour = now.getHours();
+          const currentPrice = data.prices[currentHour].price;
+
+          // Insertar el precio actual en la calculadora
+          document.getElementById('price').value = currentPrice;
+
+          // Calcular el promedio del día
+          const pricesArray = Object.values(data.prices).map(item => item.price);
+          const averagePrice = (pricesArray.reduce((sum, val) => sum + val, 0) / pricesArray.length).toFixed(4);
+          document.getElementById('average-price').innerText = `${averagePrice} €/kWh`;
+
+          // Crear lista de precios por hora
+          const pricesList = document.getElementById('price-list');
+          pricesList.innerHTML = '';
+          Object.keys(data.prices).forEach(hour => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${hour}:00 - ${data.prices[hour].price} €/kWh`;
+            pricesList.appendChild(listItem);
+          });
+
+        } catch (error) {
+          console.error('Error al obtener los precios de la electricidad:', error);
+        }
+      }
+
+      // Ejecutar cuando cargue la página
+      document.addEventListener('DOMContentLoaded', fetchElectricityPrices);
+    </script>
 
   <script>
     const toggleButton = document.getElementById('dark-mode-toggle');
